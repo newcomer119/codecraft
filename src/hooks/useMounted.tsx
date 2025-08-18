@@ -10,4 +10,4 @@ const useMounted = () => {
 
   return mounted;
 };
-export default useMounted;
+export default useMounted;  
