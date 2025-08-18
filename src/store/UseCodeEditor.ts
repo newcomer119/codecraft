@@ -76,7 +76,7 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
       const code = getCode();
 
       if (!code) {
-        set({ error: "Please enter some code" });
+        set({ error: "Please enter some code" })
         return;
       }
 
