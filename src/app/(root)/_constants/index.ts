@@ -334,6 +334,110 @@ print("Even numbers: \\(evenNumbers)")
 let sum = numbers.reduce(0, +)
 print("Sum of numbers: \\(sum)")`,
   },
+  verilog: {
+    id: "verilog",
+    label: "Verilog",
+    logoPath: "/verilog.png",
+    pistonRuntime: { language: "iverilog", version: "11.0.0" },
+    monacoLanguage: "verilog",
+    defaultCode: `//==================================================================
+// Design Module: 4-bit Synchronous Counter
+//==================================================================
+// This is the actual hardware design. It's a counter that increments
+// on each positive clock edge when 'enable' is high. It resets to zero
+// when 'reset' is high.
+module counter (
+    input  logic clk,
+    input  logic reset,
+    input  logic enable,
+    output logic [3:0] count
+);
+
+    // This 'always' block describes sequential logic that updates on the
+    // positive edge of the clock signal.
+    always @(posedge clk) begin
+        if (reset) begin
+            // On reset, the counter is synchronously set to 0.
+            count <= 4'b0000;
+        end else if (enable) begin
+            // If not reset and enabled, the counter increments.
+            count <= count + 1;
+        end
+        // If not reset and not enabled, the count implicitly holds its value.
+    end
+
+endmodule
+
+
+//==================================================================
+// Testbench Module
+//==================================================================
+// This module is used ONLY for simulation to test the counter.
+// It generates the clock and input signals to verify the design.
+module counter_tb;
+
+    // KEY FIX: Use 'reg' for signals driven by the testbench.
+    // These are variables that will store and change values over time.
+    reg        clk;
+    reg        reset;
+    reg        enable;
+
+    // Use 'wire' for signals that are outputs from our design.
+    wire [3:0] count_out;
+
+    // Instantiate the Device Under Test (DUT)
+    counter dut (
+        .clk(clk),
+        .reset(reset),
+        .enable(enable),
+        .count(count_out)
+    );
+
+    // Clock generator: Creates a clock with a 10-unit period.
+    // It will run forever, toggling the 'clk' signal every 5 time units.
+    always begin
+        #5 clk = ~clk;
+    end
+
+    // Stimulus block: Defines the sequence of test inputs.
+    initial begin
+        // 1. Initialize all inputs at the start of the simulation.
+        clk    = 0;
+        reset  = 1; // Start with the counter in a reset state.
+        enable = 0;
+        
+        // Use $monitor to print values whenever a signal changes.
+        // It's a great way to watch the simulation unfold.
+        $monitor("Time=%3t | Reset=%b Enable=%b | Count=%d", $time, reset, enable, count_out);
+
+        // 2. Hold reset for 15 time units (more than one clock cycle).
+        #15;
+        
+        // 3. De-assert reset and enable counting.
+        reset  = 0;
+        enable = 1;
+
+        // 4. Let it count for 50 time units.
+        #50;
+        
+        // 5. Test the enable signal by turning it off. The counter should pause.
+        enable = 0;
+
+        // 6. Wait for 20 time units to see the counter hold its value.
+        #20;
+        
+        // 7. Re-enable the counter to see it resume counting.
+        enable = 1;
+        
+        // 8. Wait for 30 more time units.
+        #30;
+        
+        // 9. End the simulation.
+        $finish;
+    end
+
+endmodule`,
+  },
 };
 
 export const THEMES: Theme[] = [
