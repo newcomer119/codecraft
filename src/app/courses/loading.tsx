@@ -1,4 +1,4 @@
-import { BookOpen, Code2, Brain, Database, Network, Lock, Zap } from "lucide-react";
+import { Code2, Brain, Database, Network, Lock, Zap } from "lucide-react";
 
 export default function CoursesLoading() {
   const courses = [

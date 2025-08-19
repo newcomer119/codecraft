@@ -184,7 +184,7 @@ export default function CoursesPage() {
             More Courses Coming Soon
           </h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            We're constantly adding new courses and updating existing ones. 
+            We&apos;re constantly adding new courses and updating existing ones. 
             Stay tuned for advanced topics, specialized tracks, and industry-focused content.
           </p>
         </div>

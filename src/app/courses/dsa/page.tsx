@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { ChevronLeft, ChevronRight, BookOpen, Target, Clock, CheckCircle, Play } from "lucide-react";
+import { ChevronLeft, Target, CheckCircle, Play } from "lucide-react";
 import Link from "next/link";
 import { dsaLessons } from "./lessons/data";
 
@@ -110,7 +110,7 @@ export default function DSACoursePage() {
               </div>
 
               <div className="mt-6 p-4 bg-blue-900/20 border border-blue-500/20 rounded-lg">
-                <h3 className="text-sm font-medium text-blue-400 mb-2">What you'll learn:</h3>
+                <h3 className="text-sm font-medium text-blue-400 mb-2">What you&apos;ll learn:</h3>
                 <ul className="text-xs text-blue-300 space-y-1">
                   <li>• Programming fundamentals and problem-solving</li>
                   <li>• Data structures: arrays, lists, trees, graphs</li>

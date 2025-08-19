@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { THEMES } from '../_constants'
 import { AnimatePresence, motion } from 'framer-motion'
 import { CircleOff, Github, Sun, Cloud, Laptop, Palette, Moon } from 'lucide-react'
-function ThemeSelector () {
+export default function ThemeSelector () {
   const [isOpen, setIsOpen] = useState(false)
   const {theme, setTheme} = useCodeEditorStore()
   const [mounted,setMounted]= useState(false); 
@@ -135,5 +135,3 @@ function ThemeSelector () {
     </div>
   )
 }
-
-export default ThemeSelector

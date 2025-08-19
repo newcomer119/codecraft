@@ -34,11 +34,8 @@ interface CodeEditorProps {
 
 export default function CodeEditor({
   starterCode,
-  language,
   onCodeChange,
-  onRunCode,
   onShowSolution,
-  isRunning,
   testResults,
   solution,
   showSolution
@@ -48,7 +45,7 @@ export default function CodeEditor({
   const [output, setOutput] = useState<string>('');
   const [executionError, setExecutionError] = useState<string>('');
   const [isExecuting, setIsExecuting] = useState(false);
-  const editorRef = useRef<any>(null);
+  const editorRef = useRef<unknown>(null);
 
   // Update code when starterCode changes
   useEffect(() => {
@@ -60,7 +57,7 @@ export default function CodeEditor({
     onCodeChange(newCode);
   };
 
-  const handleEditorDidMount = (editor: any) => {
+  const handleEditorDidMount = (editor: unknown) => {
     editorRef.current = editor;
   };
 
