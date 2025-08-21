@@ -67,6 +67,22 @@ function NavigationHeader() {
                 Courses
               </span>
             </Link>
+
+            {/* questions Link */}
+            <Link
+              href="/questions"
+              className="relative group flex items-center gap-2 px-4 py-1.5 rounded-lg text-gray-300 bg-gray-800/50 hover:bg-orange-500/10 
+              border border-gray-800 hover:border-orange-500/50 transition-all duration-300 shadow-lg overflow-hidden"
+            >
+              <div
+                className="absolute inset-0 bg-gradient-to-r from-orange-500/10 
+              to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
+              />
+              <Code2 className="w-4 h-4 relative z-10 group-hover:rotate-3 transition-transform" />
+              <span className="text-sm font-medium relative z-10 group-hover:text-white transition-colors">
+                Questions
+              </span>
+            </Link>
           </div>
 
           {/* right rection */}
