@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Play, RotateCcw, CheckCircle, XCircle, Clock, Star, TrendingUp } from "lucide-react";
 import Editor from "@monaco-editor/react";
 import { toast } from "react-hot-toast";
@@ -16,23 +16,30 @@ export default function QuestionPage() {
   const questionId = parseInt(params.id as string);
   const questionData = getQuestionById(questionId);
 
+  const [selectedLanguage, setSelectedLanguage] = useState("python");
+  const [code, setCode] = useState("");
+  const [isRunning, setIsRunning] = useState(false);
+  const [testResults, setTestResults] = useState<TestResult[]>([]);
+  const [activeTab, setActiveTab] = useState<"description" | "solution" | "submissions">("description");
+  const editorRef = useRef<any>(null);
+
+  // Set initial code when questionData is available
+  useEffect(() => {
+    if (questionData) {
+      setCode(questionData.starterCode.python);
+    }
+  }, [questionData]);
+
   if (!questionData) {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-white mb-2">Question Not Found</h1>
-          <p className="text-gray-400">The question you're looking for doesn't exist.</p>
+          <p className="text-gray-400">The question you&apos;re looking for doesn&apos;t exist.</p>
         </div>
       </div>
     );
   }
-
-  const [selectedLanguage, setSelectedLanguage] = useState("python");
-  const [code, setCode] = useState(questionData.starterCode.python);
-  const [isRunning, setIsRunning] = useState(false);
-  const [testResults, setTestResults] = useState<TestResult[]>([]);
-  const [activeTab, setActiveTab] = useState<"description" | "solution" | "submissions">("description");
-  const editorRef = useRef<any>(null);
 
   const handleLanguageChange = (language: string) => {
     setSelectedLanguage(language);
@@ -91,18 +98,8 @@ export default function QuestionPage() {
         toast.error("Failed to run code. Please try again.");
       }
       
-      // Show fallback test results for demo purposes
-      const fallbackResults = questionData.testCases.map((tc, index) => ({
-        testCase: index + 1,
-        input: tc.input,
-        expected: tc.output,
-        actual: "API Error - Using fallback",
-        passed: false,
-        executionTime: 0,
-        error: "Piston API unavailable - using fallback results"
-      }));
-      
-      setTestResults(fallbackResults);
+      // Show error message for failed execution
+      toast.error("Code execution failed. Please check your code and try again.");
     } finally {
       setIsRunning(false);
     }

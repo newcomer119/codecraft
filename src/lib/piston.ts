@@ -275,35 +275,7 @@ export function validateCode(code: string, language: string): { valid: boolean; 
   };
 }
 
-/**
- * Check if Piston API is available and get available runtimes
- */
-export async function checkPistonAPI(): Promise<{ available: boolean; runtimes?: any[]; error?: string }> {
-  try {
-    const response = await fetch('https://emkc.org/api/v2/piston/runtimes');
-    
-    if (!response.ok) {
-      return { 
-        available: false, 
-        error: `HTTP ${response.status}: ${response.statusText}` 
-      };
-    }
 
-    const runtimes = await response.json();
-    console.log('Available Piston runtimes:', runtimes);
-    
-    return { 
-      available: true, 
-      runtimes 
-    };
-  } catch (error) {
-    console.error('Piston API check failed:', error);
-    return { 
-      available: false, 
-      error: error instanceof Error ? error.message : 'Network error' 
-    };
-  }
-}
 
 /**
  * Get supported languages
