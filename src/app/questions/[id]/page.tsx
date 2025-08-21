@@ -314,7 +314,7 @@ export default function QuestionPage() {
 
             {testResults.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
-                Click "Run Code" to test your solution
+                Click &quot;Run Code&quot; to test your solution
               </div>
             ) : (
               <div className="space-y-3">
