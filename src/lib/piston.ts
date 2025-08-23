@@ -3,6 +3,7 @@ export interface PistonExecuteRequest {
   source: string;
   stdin?: string;
   args?: string[];
+  version?: string;
 }
 
 export interface PistonExecuteResponse {
@@ -88,15 +89,24 @@ export async function executeCode(
       throw new Error(`Unsupported language: ${request.language}. Supported languages: ${Object.keys(LANGUAGE_MAPPINGS).join(', ')}`);
     }
 
-    // Prepare the request payload with exact runtime identifier
+    // Get the version for the language
+    const languageVersion = request.version || AVAILABLE_LANGUAGES.find(lang => lang.language === languageId)?.version;
+    
+    // Prepare the request payload with exact runtime identifier and version
     const payload = {
       language: languageId,
-      source: request.source,
+      version: languageVersion,
+      files: [
+        {
+          name: getFileExtension(request.language) === 'v' ? 'main.v' : 'main',
+          content: request.source
+        }
+      ],
       stdin: request.stdin || '',
       args: request.args || []
     };
 
-    console.log('Piston API request:', payload);
+    console.log('Piston API request payload:', JSON.stringify(payload, null, 2));
 
     const response = await fetch('https://emkc.org/api/v2/piston/execute', {
       method: 'POST',
@@ -114,7 +124,17 @@ export async function executeCode(
     }
 
     const data = await response.json();
-    console.log('Piston API response:', data);
+    console.log('Piston API raw response:', data);
+    console.log('Response type:', typeof data);
+    console.log('Response keys:', Object.keys(data));
+    
+    // Check if the response has the expected structure
+    if (!data.run && !data.compile) {
+      console.error('Unexpected response structure:', data);
+      console.error('Response keys found:', Object.keys(data));
+      throw new Error('Unexpected response structure from Piston API');
+    }
+    
     return data;
   } catch (error) {
     console.error('Piston API error:', error);

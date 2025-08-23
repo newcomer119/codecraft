@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { BookOpen, Code2, Brain, Database, Network, Lock, Zap, Target } from "lucide-react";
+import { BookOpen, Code2, Brain, Database, Network, Lock, Zap, Target, Cpu } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Courses - CodeCraft",
@@ -85,6 +85,19 @@ const courses = [
     difficulty: "Advanced",
     progress: 0,
     tags: ["Python", "TensorFlow", "PyTorch"]
+  },
+  {
+    id: "vlsi",
+    title: "VLSI Design",
+    description: "Master Very Large Scale Integration design with Verilog, digital circuits, and chip design principles",
+    icon: Cpu,
+    color: "from-indigo-500 to-cyan-600",
+    borderColor: "border-indigo-500/20",
+    hoverColor: "hover:border-indigo-400/40",
+    lessons: 25,
+    difficulty: "Advanced",
+    progress: 0,
+    tags: ["Verilog", "Digital Design", "Circuit Design"]
   }
 ];
 
