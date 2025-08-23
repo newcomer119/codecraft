@@ -242,6 +242,11 @@ endmodule`;
           signal: response.run.signal
         });
         
+        // Check if the run was successful (exit code 0)
+        if (response.run.code !== 0) {
+          throw new Error(`Execution failed with exit code ${response.run.code}`);
+        }
+        
         if (response.run.stderr) {
           // Clean up the error message to be more user-friendly
           let errorMsg = response.run.stderr;
@@ -260,8 +265,48 @@ endmodule`;
           }
         }
         
-        // If no stderr or only warnings, return stdout
-        return response.run.stdout || 'Verilog code compiled and simulated successfully';
+        // Extract the actual output from the display statement
+        let output = response.run.stdout.trim();
+        
+        // For Verilog, we need to parse the $display output
+        if (output.includes('Output: out=')) {
+          // Extract just the output value
+          const match = output.match(/Output: out=(\w+)/);
+          if (match) {
+            output = `out=${match[1]}`;
+          }
+        } else if (output.includes('sum=') && output.includes('product=')) {
+          // Handle verilog_basics output
+          const sumMatch = output.match(/sum=(\d+)/);
+          const productMatch = output.match(/product=(\d+)/);
+          const flagMatch = output.match(/flag=(\w+)/);
+          if (sumMatch && productMatch && flagMatch) {
+            output = `sum=${sumMatch[1]}, product=${productMatch[1]}, flag=${flagMatch[1]}`;
+          }
+        } else if (output.includes('shifted=') && output.includes('reversed=')) {
+          // Handle vector_ops output
+          const shiftedMatch = output.match(/shifted=(\w+)/);
+          const reversedMatch = output.match(/reversed=(\w+)/);
+          if (shiftedMatch && reversedMatch) {
+            output = `shifted=${shiftedMatch[1]}, reversed=${reversedMatch[1]}`;
+          }
+        } else if (output.includes('sum=') && output.includes('cout=')) {
+          // Handle full_adder_4bit output
+          const sumMatch = output.match(/sum=(\w+)/);
+          const coutMatch = output.match(/cout=(\w+)/);
+          if (sumMatch && coutMatch) {
+            output = `sum=${sumMatch[1]}, cout=${coutMatch[1]}`;
+          }
+        } else if (output.includes('count=')) {
+          // Handle counter output
+          const countMatch = output.match(/count=(\d+)/);
+          if (countMatch) {
+            output = `count=${countMatch[1]}`;
+          }
+        }
+        
+        // If no stderr or only warnings, return the parsed output
+        return output || 'Verilog code compiled and simulated successfully';
       } else if (response.compile) {
         // Handle compile-only response
         console.log('Compile output:', response.compile);
